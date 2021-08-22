@@ -125,6 +125,52 @@ fn test_sort_in_buf2() {
 }
 
 #[test]
+fn test_sort_by_num_in_buf() {
+    let mut fin = tempfile::tempfile().unwrap();
+    write!(fin, "{}", CSV).unwrap();
+    fin.seek(io::SeekFrom::Start(0)).unwrap();
+    let mut buf = Vec::new();
+    let fout = Box::new(&mut buf);
+
+    sort_by_key(fin, fout, 1024, |line| {
+        let cols = line.split(',').collect::<Vec<&str>>();
+        cols[0].parse::<i32>().unwrap()
+    })
+    .unwrap();
+
+    assert_eq!(
+        "0,Golf,189
+1,Yankee,157
+2,Uniform,158
+3,Juliet,178
+4,Papa,138
+5,Mike,110
+6,Whiskey,116
+7,Hotel,137
+8,Echo,132
+9,India,125
+10,Delta,170
+11,Zulu,118
+12,Sierra,186
+13,Charlie,195
+14,Alpha,149
+15,November,190
+16,Tango,194
+17,Lima,121
+18,Victor,163
+19,Romeo,191
+20,Foxtrot,188
+21,Bravo,111
+22,Kilo,161
+23,X-ray,167
+24,Oscar,141
+25,Quebec,179
+",
+        str::from_utf8(&buf).unwrap()
+    );
+}
+
+#[test]
 fn test_sort_using_file1() {
     let mut fin = tempfile::tempfile().unwrap();
     write!(fin, "{}", CSV).unwrap();
@@ -211,6 +257,52 @@ fn test_sort_using_file2() {
 19,Romeo,191
 16,Tango,194
 13,Charlie,195
+",
+        str::from_utf8(&buf).unwrap()
+    );
+}
+
+#[test]
+fn test_sort_by_num_using_file() {
+    let mut fin = tempfile::tempfile().unwrap();
+    write!(fin, "{}", CSV).unwrap();
+    fin.seek(io::SeekFrom::Start(0)).unwrap();
+    let mut buf = Vec::new();
+    let fout = Box::new(&mut buf);
+
+    sort_by_key(fin, fout, 10, |line| {
+        let cols = line.split(',').collect::<Vec<&str>>();
+        cols[0].parse::<i32>().unwrap()
+    })
+    .unwrap();
+
+    assert_eq!(
+        "0,Golf,189
+1,Yankee,157
+2,Uniform,158
+3,Juliet,178
+4,Papa,138
+5,Mike,110
+6,Whiskey,116
+7,Hotel,137
+8,Echo,132
+9,India,125
+10,Delta,170
+11,Zulu,118
+12,Sierra,186
+13,Charlie,195
+14,Alpha,149
+15,November,190
+16,Tango,194
+17,Lima,121
+18,Victor,163
+19,Romeo,191
+20,Foxtrot,188
+21,Bravo,111
+22,Kilo,161
+23,X-ray,167
+24,Oscar,141
+25,Quebec,179
 ",
         str::from_utf8(&buf).unwrap()
     );
