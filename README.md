@@ -2,7 +2,7 @@
 
 Rust [external merge sort](https://en.wikipedia.org/wiki/External_sorting#External_merge_sort) library using [sort_by_cached_key](https://doc.rust-lang.org/std/primitive.slice.html#method.sort_by_cached_key).
 
-[![GitHub](https://img.shields.io/badge/github-winebarrel/ex_merge_sort_by_key-safegreen?logo=github)](https://github.com/winebarrel/ex_merge_sort)
+[![GitHub](https://img.shields.io/badge/github-winebarrel/ex__merge__sort__by__key-safegreen?logo=github)](https://github.com/winebarrel/ex_merge_sort)
 
 ## Usage
 
