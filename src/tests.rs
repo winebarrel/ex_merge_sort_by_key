@@ -1,36 +1,38 @@
 use super::sort_by_key;
+use indoc::indoc;
 use std::io;
 use std::io::Seek;
 use std::io::Write;
 use std::str;
 
-static CSV: &str = "0,Golf,189
-1,Yankee,157
-10,Delta,170
-11,Zulu,118
-12,Sierra,186
-13,Charlie,195
-14,Alpha,149
-15,November,190
-16,Tango,194
-17,Lima,121
-18,Victor,163
-19,Romeo,191
-2,Uniform,158
-20,Foxtrot,188
-21,Bravo,111
-22,Kilo,161
-23,X-ray,167
-24,Oscar,141
-25,Quebec,179
-3,Juliet,178
-4,Papa,138
-5,Mike,110
-6,Whiskey,116
-7,Hotel,137
-8,Echo,132
-9,India,125
-";
+static CSV: &str = indoc! {"
+    0,Golf,189
+    1,Yankee,157
+    10,Delta,170
+    11,Zulu,118
+    12,Sierra,186
+    13,Charlie,195
+    14,Alpha,149
+    15,November,190
+    16,Tango,194
+    17,Lima,121
+    18,Victor,163
+    19,Romeo,191
+    2,Uniform,158
+    20,Foxtrot,188
+    21,Bravo,111
+    22,Kilo,161
+    23,X-ray,167
+    24,Oscar,141
+    25,Quebec,179
+    3,Juliet,178
+    4,Papa,138
+    5,Mike,110
+    6,Whiskey,116
+    7,Hotel,137
+    8,Echo,132
+    9,India,125\n
+"};
 
 #[test]
 fn test_sort_in_buf1() {
@@ -47,33 +49,34 @@ fn test_sort_in_buf1() {
     .unwrap();
 
     assert_eq!(
-        "14,Alpha,149
-21,Bravo,111
-13,Charlie,195
-10,Delta,170
-8,Echo,132
-20,Foxtrot,188
-0,Golf,189
-7,Hotel,137
-9,India,125
-3,Juliet,178
-22,Kilo,161
-17,Lima,121
-5,Mike,110
-15,November,190
-24,Oscar,141
-4,Papa,138
-25,Quebec,179
-19,Romeo,191
-12,Sierra,186
-16,Tango,194
-2,Uniform,158
-18,Victor,163
-6,Whiskey,116
-23,X-ray,167
-1,Yankee,157
-11,Zulu,118
-",
+        indoc! {"
+            14,Alpha,149
+            21,Bravo,111
+            13,Charlie,195
+            10,Delta,170
+            8,Echo,132
+            20,Foxtrot,188
+            0,Golf,189
+            7,Hotel,137
+            9,India,125
+            3,Juliet,178
+            22,Kilo,161
+            17,Lima,121
+            5,Mike,110
+            15,November,190
+            24,Oscar,141
+            4,Papa,138
+            25,Quebec,179
+            19,Romeo,191
+            12,Sierra,186
+            16,Tango,194
+            2,Uniform,158
+            18,Victor,163
+            6,Whiskey,116
+            23,X-ray,167
+            1,Yankee,157
+            11,Zulu,118
+        "},
         str::from_utf8(&buf).unwrap()
     );
 }
@@ -93,33 +96,34 @@ fn test_sort_in_buf2() {
     .unwrap();
 
     assert_eq!(
-        "5,Mike,110
-21,Bravo,111
-6,Whiskey,116
-11,Zulu,118
-17,Lima,121
-9,India,125
-8,Echo,132
-7,Hotel,137
-4,Papa,138
-24,Oscar,141
-14,Alpha,149
-1,Yankee,157
-2,Uniform,158
-22,Kilo,161
-18,Victor,163
-23,X-ray,167
-10,Delta,170
-3,Juliet,178
-25,Quebec,179
-12,Sierra,186
-20,Foxtrot,188
-0,Golf,189
-15,November,190
-19,Romeo,191
-16,Tango,194
-13,Charlie,195
-",
+        indoc! {"
+            5,Mike,110
+            21,Bravo,111
+            6,Whiskey,116
+            11,Zulu,118
+            17,Lima,121
+            9,India,125
+            8,Echo,132
+            7,Hotel,137
+            4,Papa,138
+            24,Oscar,141
+            14,Alpha,149
+            1,Yankee,157
+            2,Uniform,158
+            22,Kilo,161
+            18,Victor,163
+            23,X-ray,167
+            10,Delta,170
+            3,Juliet,178
+            25,Quebec,179
+            12,Sierra,186
+            20,Foxtrot,188
+            0,Golf,189
+            15,November,190
+            19,Romeo,191
+            16,Tango,194
+            13,Charlie,195
+        "},
         str::from_utf8(&buf).unwrap()
     );
 }
@@ -139,33 +143,34 @@ fn test_sort_by_num_in_buf() {
     .unwrap();
 
     assert_eq!(
-        "0,Golf,189
-1,Yankee,157
-2,Uniform,158
-3,Juliet,178
-4,Papa,138
-5,Mike,110
-6,Whiskey,116
-7,Hotel,137
-8,Echo,132
-9,India,125
-10,Delta,170
-11,Zulu,118
-12,Sierra,186
-13,Charlie,195
-14,Alpha,149
-15,November,190
-16,Tango,194
-17,Lima,121
-18,Victor,163
-19,Romeo,191
-20,Foxtrot,188
-21,Bravo,111
-22,Kilo,161
-23,X-ray,167
-24,Oscar,141
-25,Quebec,179
-",
+        indoc! {"
+            0,Golf,189
+            1,Yankee,157
+            2,Uniform,158
+            3,Juliet,178
+            4,Papa,138
+            5,Mike,110
+            6,Whiskey,116
+            7,Hotel,137
+            8,Echo,132
+            9,India,125
+            10,Delta,170
+            11,Zulu,118
+            12,Sierra,186
+            13,Charlie,195
+            14,Alpha,149
+            15,November,190
+            16,Tango,194
+            17,Lima,121
+            18,Victor,163
+            19,Romeo,191
+            20,Foxtrot,188
+            21,Bravo,111
+            22,Kilo,161
+            23,X-ray,167
+            24,Oscar,141
+            25,Quebec,179
+        "},
         str::from_utf8(&buf).unwrap()
     );
 }
@@ -185,33 +190,34 @@ fn test_sort_using_file1() {
     .unwrap();
 
     assert_eq!(
-        "14,Alpha,149
-21,Bravo,111
-13,Charlie,195
-10,Delta,170
-8,Echo,132
-20,Foxtrot,188
-0,Golf,189
-7,Hotel,137
-9,India,125
-3,Juliet,178
-22,Kilo,161
-17,Lima,121
-5,Mike,110
-15,November,190
-24,Oscar,141
-4,Papa,138
-25,Quebec,179
-19,Romeo,191
-12,Sierra,186
-16,Tango,194
-2,Uniform,158
-18,Victor,163
-6,Whiskey,116
-23,X-ray,167
-1,Yankee,157
-11,Zulu,118
-",
+        indoc! {"
+            14,Alpha,149
+            21,Bravo,111
+            13,Charlie,195
+            10,Delta,170
+            8,Echo,132
+            20,Foxtrot,188
+            0,Golf,189
+            7,Hotel,137
+            9,India,125
+            3,Juliet,178
+            22,Kilo,161
+            17,Lima,121
+            5,Mike,110
+            15,November,190
+            24,Oscar,141
+            4,Papa,138
+            25,Quebec,179
+            19,Romeo,191
+            12,Sierra,186
+            16,Tango,194
+            2,Uniform,158
+            18,Victor,163
+            6,Whiskey,116
+            23,X-ray,167
+            1,Yankee,157
+            11,Zulu,118
+        "},
         str::from_utf8(&buf).unwrap()
     );
 }
@@ -231,33 +237,34 @@ fn test_sort_using_file2() {
     .unwrap();
 
     assert_eq!(
-        "5,Mike,110
-21,Bravo,111
-6,Whiskey,116
-11,Zulu,118
-17,Lima,121
-9,India,125
-8,Echo,132
-7,Hotel,137
-4,Papa,138
-24,Oscar,141
-14,Alpha,149
-1,Yankee,157
-2,Uniform,158
-22,Kilo,161
-18,Victor,163
-23,X-ray,167
-10,Delta,170
-3,Juliet,178
-25,Quebec,179
-12,Sierra,186
-20,Foxtrot,188
-0,Golf,189
-15,November,190
-19,Romeo,191
-16,Tango,194
-13,Charlie,195
-",
+        indoc! {"
+            5,Mike,110
+            21,Bravo,111
+            6,Whiskey,116
+            11,Zulu,118
+            17,Lima,121
+            9,India,125
+            8,Echo,132
+            7,Hotel,137
+            4,Papa,138
+            24,Oscar,141
+            14,Alpha,149
+            1,Yankee,157
+            2,Uniform,158
+            22,Kilo,161
+            18,Victor,163
+            23,X-ray,167
+            10,Delta,170
+            3,Juliet,178
+            25,Quebec,179
+            12,Sierra,186
+            20,Foxtrot,188
+            0,Golf,189
+            15,November,190
+            19,Romeo,191
+            16,Tango,194
+            13,Charlie,195
+        "},
         str::from_utf8(&buf).unwrap()
     );
 }
@@ -277,33 +284,34 @@ fn test_sort_by_num_using_file() {
     .unwrap();
 
     assert_eq!(
-        "0,Golf,189
-1,Yankee,157
-2,Uniform,158
-3,Juliet,178
-4,Papa,138
-5,Mike,110
-6,Whiskey,116
-7,Hotel,137
-8,Echo,132
-9,India,125
-10,Delta,170
-11,Zulu,118
-12,Sierra,186
-13,Charlie,195
-14,Alpha,149
-15,November,190
-16,Tango,194
-17,Lima,121
-18,Victor,163
-19,Romeo,191
-20,Foxtrot,188
-21,Bravo,111
-22,Kilo,161
-23,X-ray,167
-24,Oscar,141
-25,Quebec,179
-",
+        indoc! {"
+            0,Golf,189
+            1,Yankee,157
+            2,Uniform,158
+            3,Juliet,178
+            4,Papa,138
+            5,Mike,110
+            6,Whiskey,116
+            7,Hotel,137
+            8,Echo,132
+            9,India,125
+            10,Delta,170
+            11,Zulu,118
+            12,Sierra,186
+            13,Charlie,195
+            14,Alpha,149
+            15,November,190
+            16,Tango,194
+            17,Lima,121
+            18,Victor,163
+            19,Romeo,191
+            20,Foxtrot,188
+            21,Bravo,111
+            22,Kilo,161
+            23,X-ray,167
+            24,Oscar,141
+            25,Quebec,179
+        "},
         str::from_utf8(&buf).unwrap()
     );
 }

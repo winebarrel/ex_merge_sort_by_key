@@ -11,3 +11,6 @@ readme = "README.md"
 
 [dependencies]
 tempfile = "3"
+
+[dev-dependencies]
+indoc = "1.0"
