@@ -1,0 +1,13 @@
+[package]
+name = "ex_merge_sort_by_key"
+version = "0.1.0"
+authors = ["winebarrel <sugawara@winebarrel.jp>"]
+edition = "2018"
+license = "MIT"
+description = "Rust external merge sort library"
+repository = "https://github.com/winebarrel/ex_merge_sort_by_key"
+documentation = "https://docs.rs/ex_merge_sort_by_key/"
+readme = "README.md"
+
+[dependencies]
+tempfile = "3"
