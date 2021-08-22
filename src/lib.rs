@@ -2,6 +2,8 @@
 //!
 //! [![GitHub](https://img.shields.io/badge/github-winebarrel/ex__merge__sort__by__key-safegreen?logo=github)](https://github.com/winebarrel/ex_merge_sort_by_key)
 //! [![Build Status](https://github.com/winebarrel/ex_merge_sort_by_key/workflows/CI/badge.svg)](https://github.com/winebarrel/ex_merge_sort_by_key/actions)
+//! [![crates.io](https://img.shields.io/crates/v/ex_merge_sort_by_key.svg)](https://crates.io/crates/ex_merge_sort_by_key)
+//! [![docs.rs](https://docs.rs/ex_merge_sort_by_key/badge.svg)](https://docs.rs/ex_merge_sort_by_key)
 //!
 //! ## Usage
 //!
