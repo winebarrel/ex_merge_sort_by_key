@@ -1,4 +1,5 @@
 use super::file_utils;
+use super::slice_utils;
 use file_utils::RoughCount;
 use io::prelude::BufRead;
 use std::fs;
@@ -26,7 +27,7 @@ impl Chunk {
         self.file.metadata().unwrap().len() <= self.capacity
     }
 
-    pub(super) fn sort<F, K>(&self, key: &F) -> io::Result<Chunk>
+    pub(super) fn sort<F, K>(&self, rev: bool, key: &F) -> io::Result<Chunk>
     where
         F: Fn(&String) -> K,
         K: Ord,
@@ -40,7 +41,7 @@ impl Chunk {
             buf.clear();
         }
 
-        lines.sort_by_cached_key(key);
+        slice_utils::sort_by_cached_key(&mut lines, rev, key);
         let mut writer = io::BufWriter::new(tempfile::tempfile()?);
 
         for l in lines {

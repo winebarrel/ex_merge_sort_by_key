@@ -1,3 +1,4 @@
+use super::reverse_sort_by_key;
 use super::sort_by_key;
 use indoc::indoc;
 use std::io;
@@ -129,6 +130,53 @@ fn test_sort_in_buf2() {
 }
 
 #[test]
+fn test_reverse_sort_in_buf() {
+    let mut fin = tempfile::tempfile().unwrap();
+    write!(fin, "{}", CSV).unwrap();
+    fin.seek(io::SeekFrom::Start(0)).unwrap();
+    let mut buf = Vec::new();
+    let fout = Box::new(&mut buf);
+
+    reverse_sort_by_key(fin, fout, 1024, |line| {
+        let cols = line.split(',').collect::<Vec<&str>>();
+        cols[1].to_string()
+    })
+    .unwrap();
+
+    assert_eq!(
+        indoc! {"
+            11,Zulu,118
+            1,Yankee,157
+            23,X-ray,167
+            6,Whiskey,116
+            18,Victor,163
+            2,Uniform,158
+            16,Tango,194
+            12,Sierra,186
+            19,Romeo,191
+            25,Quebec,179
+            4,Papa,138
+            24,Oscar,141
+            15,November,190
+            5,Mike,110
+            17,Lima,121
+            22,Kilo,161
+            3,Juliet,178
+            9,India,125
+            7,Hotel,137
+            0,Golf,189
+            20,Foxtrot,188
+            8,Echo,132
+            10,Delta,170
+            13,Charlie,195
+            21,Bravo,111
+            14,Alpha,149
+        "},
+        str::from_utf8(&buf).unwrap()
+    );
+}
+
+#[test]
 fn test_sort_by_num_in_buf() {
     let mut fin = tempfile::tempfile().unwrap();
     write!(fin, "{}", CSV).unwrap();
@@ -170,6 +218,53 @@ fn test_sort_by_num_in_buf() {
             23,X-ray,167
             24,Oscar,141
             25,Quebec,179
+        "},
+        str::from_utf8(&buf).unwrap()
+    );
+}
+
+#[test]
+fn test_reverse_sort_by_num_in_buf() {
+    let mut fin = tempfile::tempfile().unwrap();
+    write!(fin, "{}", CSV).unwrap();
+    fin.seek(io::SeekFrom::Start(0)).unwrap();
+    let mut buf = Vec::new();
+    let fout = Box::new(&mut buf);
+
+    reverse_sort_by_key(fin, fout, 1024, |line| {
+        let cols = line.split(',').collect::<Vec<&str>>();
+        cols[0].parse::<i32>().unwrap()
+    })
+    .unwrap();
+
+    assert_eq!(
+        indoc! {"
+            25,Quebec,179
+            24,Oscar,141
+            23,X-ray,167
+            22,Kilo,161
+            21,Bravo,111
+            20,Foxtrot,188
+            19,Romeo,191
+            18,Victor,163
+            17,Lima,121
+            16,Tango,194
+            15,November,190
+            14,Alpha,149
+            13,Charlie,195
+            12,Sierra,186
+            11,Zulu,118
+            10,Delta,170
+            9,India,125
+            8,Echo,132
+            7,Hotel,137
+            6,Whiskey,116
+            5,Mike,110
+            4,Papa,138
+            3,Juliet,178
+            2,Uniform,158
+            1,Yankee,157
+            0,Golf,189
         "},
         str::from_utf8(&buf).unwrap()
     );
@@ -270,6 +365,53 @@ fn test_sort_using_file2() {
 }
 
 #[test]
+fn reverse_test_sort_using_file() {
+    let mut fin = tempfile::tempfile().unwrap();
+    write!(fin, "{}", CSV).unwrap();
+    fin.seek(io::SeekFrom::Start(0)).unwrap();
+    let mut buf = Vec::new();
+    let fout = Box::new(&mut buf);
+
+    reverse_sort_by_key(fin, fout, 10, |line| {
+        let cols = line.split(',').collect::<Vec<&str>>();
+        cols[1].to_string()
+    })
+    .unwrap();
+
+    assert_eq!(
+        indoc! {"
+            11,Zulu,118
+            1,Yankee,157
+            23,X-ray,167
+            6,Whiskey,116
+            18,Victor,163
+            2,Uniform,158
+            16,Tango,194
+            12,Sierra,186
+            19,Romeo,191
+            25,Quebec,179
+            4,Papa,138
+            24,Oscar,141
+            15,November,190
+            5,Mike,110
+            17,Lima,121
+            22,Kilo,161
+            3,Juliet,178
+            9,India,125
+            7,Hotel,137
+            0,Golf,189
+            20,Foxtrot,188
+            8,Echo,132
+            10,Delta,170
+            13,Charlie,195
+            21,Bravo,111
+            14,Alpha,149
+        "},
+        str::from_utf8(&buf).unwrap()
+    );
+}
+
+#[test]
 fn test_sort_by_num_using_file() {
     let mut fin = tempfile::tempfile().unwrap();
     write!(fin, "{}", CSV).unwrap();
@@ -311,6 +453,53 @@ fn test_sort_by_num_using_file() {
             23,X-ray,167
             24,Oscar,141
             25,Quebec,179
+        "},
+        str::from_utf8(&buf).unwrap()
+    );
+}
+
+#[test]
+fn test_reverse_sort_by_num_using_file() {
+    let mut fin = tempfile::tempfile().unwrap();
+    write!(fin, "{}", CSV).unwrap();
+    fin.seek(io::SeekFrom::Start(0)).unwrap();
+    let mut buf = Vec::new();
+    let fout = Box::new(&mut buf);
+
+    reverse_sort_by_key(fin, fout, 10, |line| {
+        let cols = line.split(',').collect::<Vec<&str>>();
+        cols[0].parse::<i32>().unwrap()
+    })
+    .unwrap();
+
+    assert_eq!(
+        indoc! {"
+            25,Quebec,179
+            24,Oscar,141
+            23,X-ray,167
+            22,Kilo,161
+            21,Bravo,111
+            20,Foxtrot,188
+            19,Romeo,191
+            18,Victor,163
+            17,Lima,121
+            16,Tango,194
+            15,November,190
+            14,Alpha,149
+            13,Charlie,195
+            12,Sierra,186
+            11,Zulu,118
+            10,Delta,170
+            9,India,125
+            8,Echo,132
+            7,Hotel,137
+            6,Whiskey,116
+            5,Mike,110
+            4,Papa,138
+            3,Juliet,178
+            2,Uniform,158
+            1,Yankee,157
+            0,Golf,189
         "},
         str::from_utf8(&buf).unwrap()
     );
