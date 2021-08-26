@@ -1,6 +1,6 @@
 [package]
 name = "ex_merge_sort_by_key"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["winebarrel <sugawara@winebarrel.jp>"]
 edition = "2018"
 license = "MIT"
