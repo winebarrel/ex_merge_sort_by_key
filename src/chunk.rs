@@ -27,7 +27,7 @@ impl Chunk {
         self.file.metadata().unwrap().len() <= self.capacity
     }
 
-    pub(super) fn sort<F, K>(&self, rev: bool, key: &F) -> io::Result<Chunk>
+    pub(super) fn sort<F, K>(&self, desc: bool, key: &F) -> io::Result<Chunk>
     where
         F: Fn(&String) -> K,
         K: Ord,
@@ -41,7 +41,7 @@ impl Chunk {
             buf.clear();
         }
 
-        slice_utils::sort_by_cached_key(&mut lines, rev, key);
+        slice_utils::sort_by_cached_key(&mut lines, desc, key);
         let mut writer = io::BufWriter::new(tempfile::tempfile()?);
 
         for l in lines {

@@ -1,7 +1,7 @@
 use std::mem;
 
 // NOTE: copy from https://doc.rust-lang.org/std/primitive.slice.html#method.sort_by_cached_key
-pub(crate) fn sort_by_cached_key<T, K, F>(list: &mut Vec<T>, rev: bool, f: F)
+pub(crate) fn sort_by_cached_key<T, K, F>(list: &mut Vec<T>, desc: bool, f: F)
 where
     F: FnMut(&T) -> K,
     K: Ord,
@@ -15,7 +15,7 @@ where
                 .map(|(i, k)| (k, i as $t))
                 .collect();
 
-            if rev {
+            if desc {
                 indices.sort_unstable_by(|a, b| b.cmp(a));
             } else {
                 indices.sort_unstable_by(|a, b| a.cmp(b));

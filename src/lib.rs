@@ -59,7 +59,7 @@ pub fn sort_by_key_with_order<T, F, K>(
     fin: fs::File,
     fout: T,
     cap: u64,
-    rev: bool,
+    desc: bool,
     key: F,
 ) -> io::Result<()>
 where
@@ -68,11 +68,11 @@ where
     K: Ord,
 {
     let chunk = Chunk::new(fin, cap)?;
-    let sorted = sort_chunk(chunk, rev, &key)?;
+    let sorted = sort_chunk(chunk, desc, &key)?;
     file_utils::copy(&sorted.file, fout)
 }
 
-fn sort_chunk<F, K>(chunk: Chunk, rev: bool, key: &F) -> io::Result<Chunk>
+fn sort_chunk<F, K>(chunk: Chunk, desc: bool, key: &F) -> io::Result<Chunk>
 where
     F: Fn(&String) -> K,
     K: Ord,
@@ -82,24 +82,24 @@ where
     }
 
     if chunk.fit_in_buffer() {
-        return chunk.sort(rev, key);
+        return chunk.sort(desc, key);
     }
 
     let (c1, c2) = chunk.split()?;
 
     if c2.rough_count == RoughCount::Zero {
-        return c1.sort(rev, key);
+        return c1.sort(desc, key);
     }
 
     Ok(merge(
-        sort_chunk(c1, rev, key)?,
-        sort_chunk(c2, rev, key)?,
-        rev,
+        sort_chunk(c1, desc, key)?,
+        sort_chunk(c2, desc, key)?,
+        desc,
         key,
     )?)
 }
 
-fn merge<F, K>(c1: Chunk, c2: Chunk, rev: bool, key: &F) -> io::Result<Chunk>
+fn merge<F, K>(c1: Chunk, c2: Chunk, desc: bool, key: &F) -> io::Result<Chunk>
 where
     F: Fn(&String) -> K,
     K: Ord,
@@ -119,7 +119,7 @@ where
     let mut r2_key = key(&r2_buf);
 
     while r1_read > 0 && r2_read > 0 {
-        if (!rev && r1_key < r2_key) || (rev && r1_key > r2_key) {
+        if (!desc && r1_key < r2_key) || (desc && r1_key > r2_key) {
             writer.write(&r1_buf.as_bytes())?;
             r1_buf.clear();
             r1_read = reader1.read_line(&mut r1_buf)?;
