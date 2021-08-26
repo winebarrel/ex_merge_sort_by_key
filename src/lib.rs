@@ -28,6 +28,7 @@ mod tests;
 
 mod chunk;
 mod file_utils;
+mod slice_utils;
 
 use chunk::Chunk;
 use file_utils::RoughCount;
@@ -42,12 +43,36 @@ where
     F: Fn(&String) -> K,
     K: Ord,
 {
+    sort_by_key_with_order(fin, fout, cap, false, key)
+}
+
+pub fn reverse_sort_by_key<T, F, K>(fin: fs::File, fout: T, cap: u64, key: F) -> io::Result<()>
+where
+    T: io::Write,
+    F: Fn(&String) -> K,
+    K: Ord,
+{
+    sort_by_key_with_order(fin, fout, cap, true, key)
+}
+
+pub fn sort_by_key_with_order<T, F, K>(
+    fin: fs::File,
+    fout: T,
+    cap: u64,
+    desc: bool,
+    key: F,
+) -> io::Result<()>
+where
+    T: io::Write,
+    F: Fn(&String) -> K,
+    K: Ord,
+{
     let chunk = Chunk::new(fin, cap)?;
-    let sorted = sort_chunk(chunk, &key)?;
+    let sorted = sort_chunk(chunk, desc, &key)?;
     file_utils::copy(&sorted.file, fout)
 }
 
-fn sort_chunk<F, K>(chunk: Chunk, key: &F) -> io::Result<Chunk>
+fn sort_chunk<F, K>(chunk: Chunk, desc: bool, key: &F) -> io::Result<Chunk>
 where
     F: Fn(&String) -> K,
     K: Ord,
@@ -57,19 +82,24 @@ where
     }
 
     if chunk.fit_in_buffer() {
-        return chunk.sort(key);
+        return chunk.sort(desc, key);
     }
 
     let (c1, c2) = chunk.split()?;
 
     if c2.rough_count == RoughCount::Zero {
-        return c1.sort(key);
+        return c1.sort(desc, key);
     }
 
-    Ok(merge(sort_chunk(c1, key)?, sort_chunk(c2, key)?, key)?)
+    Ok(merge(
+        sort_chunk(c1, desc, key)?,
+        sort_chunk(c2, desc, key)?,
+        desc,
+        key,
+    )?)
 }
 
-fn merge<F, K>(c1: Chunk, c2: Chunk, key: &F) -> io::Result<Chunk>
+fn merge<F, K>(c1: Chunk, c2: Chunk, desc: bool, key: &F) -> io::Result<Chunk>
 where
     F: Fn(&String) -> K,
     K: Ord,
@@ -89,7 +119,7 @@ where
     let mut r2_key = key(&r2_buf);
 
     while r1_read > 0 && r2_read > 0 {
-        if r1_key < r2_key {
+        if (!desc && r1_key < r2_key) || (desc && r1_key > r2_key) {
             writer.write(&r1_buf.as_bytes())?;
             r1_buf.clear();
             r1_read = reader1.read_line(&mut r1_buf)?;
