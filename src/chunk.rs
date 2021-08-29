@@ -4,6 +4,7 @@ use file_utils::RoughCount;
 use io::prelude::BufRead;
 use std::fs;
 use std::io;
+use std::io::Seek;
 use std::io::Write;
 
 pub(super) struct Chunk {
@@ -48,9 +49,8 @@ impl Chunk {
             writer.write(l.as_bytes())?;
         }
 
-        let file = writer.into_inner()?;
-        file_utils::rewind(&file)?;
-        Chunk::new(file, self.capacity)
+        writer.seek(io::SeekFrom::Start(0))?;
+        Chunk::new(writer.into_inner().unwrap(), self.capacity)
     }
 
     pub(super) fn split(&self) -> io::Result<(Chunk, Chunk)> {
@@ -78,14 +78,12 @@ impl Chunk {
             buf.clear();
         }
 
-        let file1 = writer1.into_inner()?;
-        file_utils::rewind(&file1)?;
-        let file2 = writer2.into_inner()?;
-        file_utils::rewind(&file2)?;
+        writer1.seek(io::SeekFrom::Start(0))?;
+        writer2.seek(io::SeekFrom::Start(0))?;
 
         Ok((
-            Chunk::new(file1, self.capacity)?,
-            Chunk::new(file2, self.capacity)?,
+            Chunk::new(writer1.into_inner().unwrap(), self.capacity)?,
+            Chunk::new(writer2.into_inner().unwrap(), self.capacity)?,
         ))
     }
 }

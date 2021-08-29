@@ -26,8 +26,7 @@ pub(crate) fn count_roughly(f: &fs::File) -> io::Result<RoughCount> {
         }
     }
 
-    let mut f = reader.into_inner();
-    f.seek(io::SeekFrom::Start(0))?;
+    reader.seek(io::SeekFrom::Start(0))?;
 
     let rc = match n {
         0 => RoughCount::Zero,
@@ -37,10 +36,6 @@ pub(crate) fn count_roughly(f: &fs::File) -> io::Result<RoughCount> {
     };
 
     Ok(rc)
-}
-
-pub(crate) fn rewind(mut f: &fs::File) -> io::Result<u64> {
-    f.seek(io::SeekFrom::Start(0))
 }
 
 pub(crate) fn copy<T>(fin: &fs::File, fout: T) -> io::Result<()>
